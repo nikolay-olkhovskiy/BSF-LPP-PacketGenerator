@@ -21,6 +21,7 @@ void PC_bsf_Init(bool* success) {
 
 	for (int j = 0; j < PP_N; j++) {
 		PD_c[j] = (PT_float_T)(PP_N - j) * PP_RHO;
+		PD_dataset[PD_index].c[j] = PD_c[j];
 		PD_centerObjectF += PD_c[j] * PP_THETA;
 	}
 
@@ -28,18 +29,24 @@ void PC_bsf_Init(bool* success) {
 		for (int j = 0; j < PP_N; j++)
 			PD_A[i][j] = 0;
 		PD_A[i][i] = 1;
+		Vector_Copy(PD_A[i], PD_dataset[PD_index].A[i]);
 		PD_b[i] = PP_ALPHA;
+		PD_dataset[PD_index].b[i] = PD_b[i];
 	}
 
 	for (int j = 0; j < PP_N; j++)
 		PD_A[PP_N][j] = 1;
+	Vector_Copy(PD_A[PP_N], PD_dataset[PD_index].A[PP_N]);
 	PD_b[PP_N] = PP_ALPHA * (PP_N - 1) + PP_ALPHA / 2;
+	PD_dataset[PD_index].b[PP_N] = PD_b[PP_N];
 
 	for (int i = PP_N + 1; i < 2 * PP_N + 1; i++) {
 		for (int j = 0; j < PP_N; j++)
 			PD_A[i][j] = 0;
 		PD_A[i][i - PP_N - 1] = -1;
+		Vector_Copy(PD_A[i], PD_dataset[PD_index].A[i]);
 		PD_b[i] = 0;
+		PD_dataset[PD_index].b[i] = PD_b[i];
 	}
 
 	for (int i = 0; i < 2 * PP_N + 1; i++)
@@ -143,55 +150,66 @@ void PC_bsf_ProcessResults(		// For Job 0
 	PT_bsf_parameter_T* parameter, 
 	int* nextJob,
 	bool* exit 
-) {
-	bool like;
-	struct extendedReduceElem_T {	// Extended element type of reduce list
-		PT_bsf_reduceElem_T elem;	// Element of reduce list
-		int reduceCounter;			// Reduce Counter
-	};
-	extendedReduceElem_T* extendedReduceElem;
-
-	if (PD_k == PP_NUM_OF_RND_INEQUALITIES + 2 * PP_N + 1) {
-		*exit = true;
-		return;
-	}
-
-	PD_failuresType1 += reduceResult->failuresType1;
-	PD_failuresType2 += reduceResult->failuresType2;
-	PD_failuresType3 += reduceResult->failuresType3;
-			
-	extendedReduceElem = (extendedReduceElem_T*)reduceResult;
-
-	/* debug *//*cout << "----------------\n";
-	for (int w = 0; w < BSF_sv_numOfWorkers; w++) {
-		cout << "w=" << w << ")\t";
-		for (int j = 0; j < PP_N; j++) cout << setw(PP_SETW) << extendedReduceElem[w].elem.a[j] << "\t";
-		cout << "<=\t" << setw(PP_SETW) << extendedReduceElem[w].elem.b << endl;
-	}/* end debug */
-
-	for (int w = 0; w < BSF_sv_numOfWorkers; w++) {
-
-		like = false;
-
-		for (int i = 2 * PP_N + 1; i < PD_k; i++) {
-			if (like = Like(extendedReduceElem[w].elem.a, extendedReduceElem[w].elem.b, extendedReduceElem[w].elem.aNorm, PD_A[i], PD_b[i], PD_aNorm[i]))
-				break;
-		}
-
-		if (like) {
-			PD_failuresType3++;
-			continue;
-		}
-
-		Vector_Copy(extendedReduceElem[w].elem.a, PD_A[PD_k]);
-		PD_b[PD_k] = extendedReduceElem[w].elem.b;
-		PD_aNorm[PD_k] = extendedReduceElem[w].elem.aNorm;
-		PD_k++;
+)	{
+	bool success; // to call PC_bsf_Init(bool* success)
+	if (PD_index < PP_NUMBER_OF_PROBLEMS) {
+		bool like;
+		struct extendedReduceElem_T {	// Extended element type of reduce list
+			PT_bsf_reduceElem_T elem;	// Element of reduce list
+			int reduceCounter;			// Reduce Counter
+		};
+		extendedReduceElem_T* extendedReduceElem;
 
 		if (PD_k == PP_NUM_OF_RND_INEQUALITIES + 2 * PP_N + 1) {
-			*exit = true;
-			return;
+			PD_k = 2 * PP_N + 1;
+			PC_bsf_Init(&success);
+			PD_index++;
 		}
+
+		PD_failuresType1 += reduceResult->failuresType1;
+		PD_failuresType2 += reduceResult->failuresType2;
+		PD_failuresType3 += reduceResult->failuresType3;
+
+		extendedReduceElem = (extendedReduceElem_T*)reduceResult;
+
+		/* debug *//*cout << "----------------\n";
+		for (int w = 0; w < BSF_sv_numOfWorkers; w++) {
+			cout << "w=" << w << ")\t";
+			for (int j = 0; j < PP_N; j++) cout << setw(PP_SETW) << extendedReduceElem[w].elem.a[j] << "\t";
+			cout << "<=\t" << setw(PP_SETW) << extendedReduceElem[w].elem.b << endl;
+		}/* end debug */
+
+		for (int w = 0; w < BSF_sv_numOfWorkers; w++) {
+
+			like = false;
+
+			for (int i = 2 * PP_N + 1; i < PD_k; i++) {
+				if (like = Like(extendedReduceElem[w].elem.a, extendedReduceElem[w].elem.b, extendedReduceElem[w].elem.aNorm, PD_A[i], PD_b[i], PD_aNorm[i]))
+					break;
+			}
+
+			if (like) {
+				PD_failuresType3++;
+				continue;
+			}
+
+			Vector_Copy(extendedReduceElem[w].elem.a, PD_A[PD_k]);
+			Vector_Copy(PD_A[PD_k], PD_dataset[PD_index].A[PD_k]);
+			PD_b[PD_k] = extendedReduceElem[w].elem.b;
+			PD_dataset[PD_index].b[PD_k] = PD_b[PD_k];
+			PD_aNorm[PD_k] = extendedReduceElem[w].elem.aNorm;
+			PD_k++;
+
+			if (PD_k == PP_NUM_OF_RND_INEQUALITIES + 2 * PP_N + 1) {
+				PD_k = 2 * PP_N + 1;
+				PC_bsf_Init(&success);
+				PD_index++;
+			}
+		}
+	}
+	else {
+		*exit = true;
+		return;
 	}
 }
 
@@ -333,16 +351,19 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream, "%d\t%d\n", PP_M, PP_N);
+	fprintf(stream, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+		fprintf(stream, "%d\t%d\n", PP_M, PP_N);
 
-	for (int i = 0; i < PP_M; i++) {
+		for (int i = 0; i < PP_M; i++) {
+			for (int j = 0; j < PP_N; j++)
+				fprintf(stream, "%.2f\t", PD_dataset[index].A[i][j]);
+			fprintf(stream, "%.2f\n", PD_dataset[index].b[i]);
+		}
 		for (int j = 0; j < PP_N; j++)
-			fprintf(stream, "%.2f\t", PD_A[i][j]);
-		fprintf(stream, "%.2f\n", PD_b[i]);
+			fprintf(stream, "%.2f\t", PD_dataset[index].c[j]);
+		fprintf(stream, "\n");
 	}
-	for (int j = 0; j < PP_N; j++)
-		fprintf(stream, "%.2f\t", PD_c[j]);
-
 	fclose(stream);
 	cout << "LPP is saved into file '" << fileName << "'." << endl;
 	cout << "-----------------------------------" << endl;

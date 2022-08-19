@@ -14,6 +14,7 @@ static unsigned PD_failuresType1 = 0;
 static unsigned PD_failuresType2 = 0;
 static unsigned PD_failuresType3 = 0;
 static int PD_k = 2 * PP_N +1;	// Index of current random inequality
+static int PD_index = 0;			// Index of current LPP in dataset
 
 //========================== Problem data structures ==============================
 static PT_matrix_T PD_A;
@@ -21,6 +22,7 @@ static PT_column_T PD_b;
 static PT_vector_T PD_c;
 static PT_vector_T PD_center;		// Center of hypercube
 static PT_column_T PD_aNorm;
+PT_dataset_T* PD_dataset = new PT_dataset_T[PP_NUMBER_OF_PROBLEMS];		// Many LPPs in one dataset
 
 //========================== Files ==============================
 static string PD_fileName;
