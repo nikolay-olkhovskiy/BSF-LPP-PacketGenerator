@@ -7,6 +7,7 @@ Author: Leonid B. Sokolinsky
 #pragma once
 #include <iomanip>
 #include <iostream>
+#include <vector>
 #include <math.h>
 #include <omp.h>
 #include <stdio.h>

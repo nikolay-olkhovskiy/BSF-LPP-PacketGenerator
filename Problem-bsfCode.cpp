@@ -367,6 +367,151 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	fclose(stream);
 	cout << "LPP is saved into file '" << fileName << "'." << endl;
 	cout << "-----------------------------------" << endl;
+	
+	// --------- Output to Matrix A file ---------------- //
+	PD_fileName = PP_PATH;
+	PD_fileName += PP_MTX_PREFIX;
+	PD_fileName += PP_PROBLEM_NAME;
+	PD_fileName += PP_MTX_POSTFIX_A;
+	fileName = PD_fileName.c_str();
+	
+	cout << "-----------------------------------" << endl;
+	FILE* stream_A = fopen(fileName, "w");
+	if (stream_A == NULL) {
+		cout << "Failure of opening file " << fileName << "!\n";
+		return;
+	}
+	fprintf(stream_A, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+		ConvertToMTX(index);
+		int size = PD_MTXdataset.size();
+		fprintf(stream_A, "%d\t%d\t%d\n", PP_MTX_M, PP_MTX_N, size);
+		for (int i = 0; i < size; i++)
+			fprintf(stream_A, "%d\t%d\t%.1f\n", PD_MTXdataset[i].row, PD_MTXdataset[i].col, PD_MTXdataset[i].val);
+	}
+	fclose(stream_A);
+	cout << "Matrix A is saved into file '" << fileName << "'." << endl;
+	cout << "-----------------------------------" << endl;
+
+	// --------- Output to Column b file ---------------- //
+	PD_fileName = PP_PATH;
+	PD_fileName += PP_MTX_PREFIX;
+	PD_fileName += PP_PROBLEM_NAME;
+	PD_fileName += PP_MTX_POSTFIX_B;
+	fileName = PD_fileName.c_str();
+
+	cout << "-----------------------------------" << endl;
+	FILE* stream_b = fopen(fileName, "w");
+	if (stream_b == NULL) {
+		cout << "Failure of opening file " << fileName << "!\n";
+		return;
+	}
+	fprintf(stream_b, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+		fprintf(stream_b, "%d\t%d\n", PP_MTX_M, 1);
+		for (int i = 0; i < PP_M; i++)
+			if (i < PP_N + 1 || i > PP_N * 2)
+				fprintf(stream_b, "%.1f\n", PD_dataset[index].b[i]);
+	}
+	fclose(stream_b);
+	cout << "Column b is saved into file '" << fileName << "'." << endl;
+	cout << "-----------------------------------" << endl;
+
+	// --------- Output to Vector ñ file ---------------- //
+	PD_fileName = PP_PATH;
+	PD_fileName += PP_MTX_PREFIX;
+	PD_fileName += PP_PROBLEM_NAME;
+	PD_fileName += PP_MTX_POSTFIX_C;
+	fileName = PD_fileName.c_str();
+
+	cout << "-----------------------------------" << endl;
+	FILE* stream_c = fopen(fileName, "w");
+	if (stream_c == NULL) {
+		cout << "Failure of opening file " << fileName << "!\n";
+		return;
+	}
+	fprintf(stream_c, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+		fprintf(stream_c, "%d\t%d\n", PP_MTX_N, 1);
+		for (int i = 0; i < PP_MTX_N; i++)
+			if (i < PP_N)
+				fprintf(stream_c, "%.1f\n", PD_dataset[index].c[i]);
+			else
+				fprintf(stream_c, "%.1f\n", 0.);
+	}
+	fclose(stream_c);
+	cout << "Vector c is saved into file '" << fileName << "'." << endl;
+	cout << "-----------------------------------" << endl;
+
+	// --------- Output to HI file ---------------- //
+	PD_fileName = PP_PATH;
+	PD_fileName += PP_MTX_PREFIX;
+	PD_fileName += PP_PROBLEM_NAME;
+	PD_fileName += PP_MTX_POSTFIX_HI;
+	fileName = PD_fileName.c_str();
+
+	cout << "-----------------------------------" << endl;
+	FILE* stream_hi = fopen(fileName, "w");
+	if (stream_hi == NULL) {
+		cout << "Failure of opening file " << fileName << "!\n";
+		return;
+	}
+	fprintf(stream_hi, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+		fprintf(stream_hi, "%d\t%d\n", PP_MTX_N, 1);
+		for (int i = 0; i < PP_MTX_N; i++)
+				fprintf(stream_hi, "%e\n", 1e+308);
+	}
+	fclose(stream_hi);
+	cout << "Values HI are saved into file '" << fileName << "'." << endl;
+	cout << "-----------------------------------" << endl;
+
+	// --------- Output to LO file ---------------- //
+	PD_fileName = PP_PATH;
+	PD_fileName += PP_MTX_PREFIX;
+	PD_fileName += PP_PROBLEM_NAME;
+	PD_fileName += PP_MTX_POSTFIX_LO;
+	fileName = PD_fileName.c_str();
+
+	cout << "-----------------------------------" << endl;
+	FILE* stream_lo = fopen(fileName, "w");
+	if (stream_lo == NULL) {
+		cout << "Failure of opening file " << fileName << "!\n";
+		return;
+	}
+	fprintf(stream_lo, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+		fprintf(stream_lo, "%d\t%d\n", PP_MTX_N, 1);
+		for (int i = 0; i < PP_MTX_N; i++)
+				fprintf(stream_lo, "%.1f\n", 0.);
+	}
+	fclose(stream_lo);
+	cout << "Values LO are saved into file '" << fileName << "'." << endl;
+	cout << "-----------------------------------" << endl;
+
+	// --------- Output to x0 file ---------------- //
+	PD_fileName = PP_PATH;
+	PD_fileName += PP_MTX_PREFIX;
+	PD_fileName += PP_PROBLEM_NAME;
+	PD_fileName += PP_MTX_POSTFIX_X0;
+	fileName = PD_fileName.c_str();
+
+	cout << "-----------------------------------" << endl;
+	FILE* stream_x0 = fopen(fileName, "w");
+	if (stream_x0 == NULL) {
+		cout << "Failure of opening file " << fileName << "!\n";
+		return;
+	}
+	fprintf(stream_x0, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+		fprintf(stream_x0, "%d\t%d\n", PP_MTX_N, 1);
+		for (int i = 0; i < PP_MTX_N; i++)
+			fprintf(stream_x0, "%.1f\n", 0.);
+	}
+	fclose(stream_x0);
+	cout << "Values LO are saved into file '" << fileName << "'." << endl;
+	cout << "-----------------------------------" << endl;
+
 #endif // PP_FILE_OUTPUT
 }
 
@@ -486,5 +631,38 @@ inline void Vector_Addition(PT_vector_T x, PT_vector_T y, PT_vector_T z) {  // z
 inline void Vector_Copy(PT_vector_T fromPoint, PT_vector_T toPoint) { // toPoint = fromPoint
 	for (int j = 0; j < PP_N; j++) {
 		toPoint[j] = fromPoint[j];
+	}
+}
+
+// --------- Conversion dataset to MTX format ----------- //
+inline void ConvertToMTX(int index) {
+	int row = 0;
+	int MTXrow = 1;
+	int freeVals = 1;
+	PD_MTXdataset.clear();
+	while (row < PP_N + 1) {
+		for (int j = 0; j < PP_N; j++) {
+			PT_float_T value = PD_dataset[index].A[row][j];
+			if (value != 0.0) {
+				PD_MTXdataset.push_back({ MTXrow, j + 1, value });
+			}
+		}
+		PD_MTXdataset.push_back({ MTXrow, PP_N + freeVals, 1. });
+		freeVals++;
+		row++;
+		MTXrow++;
+	}
+	row += PP_N;
+	while (row < PP_M) {
+		for (int j = 0; j < PP_N; j++) {
+			PT_float_T value = PD_dataset[index].A[row][j];
+			if (value != 0.0) {
+				PD_MTXdataset.push_back({ MTXrow, j + 1, value });
+			}
+		}
+		PD_MTXdataset.push_back({ MTXrow, PP_N + freeVals, 1. });
+		freeVals++;
+		row++;
+		MTXrow++;
 	}
 }

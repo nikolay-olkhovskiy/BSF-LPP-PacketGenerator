@@ -18,3 +18,12 @@ typedef struct {
 	PT_column_T b;
 	PT_vector_T c;
 } PT_dataset_T;
+typedef struct {
+	int row;
+	int col;
+	PT_float_T val;
+} PT_MTXrow_T;
+
+typedef PT_float_T	PT_MTXvector_T[PP_MTX_N];
+typedef PT_float_T	PT_MTXmatrix_T[PP_MTX_M][PP_MTX_N];
+typedef PT_float_T	PT_MTXcolumn_T[PP_MTX_M];

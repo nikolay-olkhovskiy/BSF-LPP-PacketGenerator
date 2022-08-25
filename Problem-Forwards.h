@@ -19,6 +19,7 @@ PT_float_T	Vector_DotProduct(PT_vector_T x, PT_vector_T y);
 void		Vector_MultiplyByNumber(PT_vector_T x, PT_float_T r, PT_vector_T y);
 PT_float_T	Vector_NormSquare(PT_vector_T x);
 void		Vector_Subtraction(PT_vector_T x, PT_vector_T y, PT_vector_T z);
+void		ConvertToMTX(int index);
 //====================== Macros ================================
 #define PF_MIN(x,y) (x<y?x:y)
 #define PF_MAX(x,y) (x>y?x:y)

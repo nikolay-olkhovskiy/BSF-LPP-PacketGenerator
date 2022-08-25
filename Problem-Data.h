@@ -23,6 +23,7 @@ static PT_vector_T PD_c;
 static PT_vector_T PD_center;		// Center of hypercube
 static PT_column_T PD_aNorm;
 PT_dataset_T* PD_dataset = new PT_dataset_T[PP_NUMBER_OF_PROBLEMS];		// Many LPPs in one dataset
+vector<PT_MTXrow_T> PD_MTXdataset (0);
 
 //========================== Files ==============================
 static string PD_fileName;
