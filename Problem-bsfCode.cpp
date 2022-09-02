@@ -435,7 +435,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		fprintf(stream_c, "%d\t%d\n", PP_MTX_N, 1);
 		for (int i = 0; i < PP_MTX_N; i++)
 			if (i < PP_N)
-				fprintf(stream_c, "%.1f\n", PD_dataset[index].c[i]);
+				fprintf(stream_c, "%.1f\n", -PD_dataset[index].c[i]);
 			else
 				fprintf(stream_c, "%.1f\n", 0.);
 	}
@@ -489,28 +489,28 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "Values LO are saved into file '" << fileName << "'." << endl;
 	cout << "-----------------------------------" << endl;
 
-	// --------- Output to x0 file ---------------- //
-	PD_fileName = PP_PATH;
-	PD_fileName += PP_MTX_PREFIX;
-	PD_fileName += PP_PROBLEM_NAME;
-	PD_fileName += PP_MTX_POSTFIX_X0;
-	fileName = PD_fileName.c_str();
+	//// --------- Output to x0 file ---------------- //
+	//PD_fileName = PP_PATH;
+	//PD_fileName += PP_MTX_PREFIX;
+	//PD_fileName += PP_PROBLEM_NAME;
+	//PD_fileName += PP_MTX_POSTFIX_X0;
+	//fileName = PD_fileName.c_str();
 
-	cout << "-----------------------------------" << endl;
-	FILE* stream_x0 = fopen(fileName, "w");
-	if (stream_x0 == NULL) {
-		cout << "Failure of opening file " << fileName << "!\n";
-		return;
-	}
-	fprintf(stream_x0, "%d\n", PP_NUMBER_OF_PROBLEMS);
-	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
-		fprintf(stream_x0, "%d\t%d\n", PP_MTX_N, 1);
-		for (int i = 0; i < PP_MTX_N; i++)
-			fprintf(stream_x0, "%.1f\n", 0.);
-	}
-	fclose(stream_x0);
-	cout << "Values LO are saved into file '" << fileName << "'." << endl;
-	cout << "-----------------------------------" << endl;
+	//cout << "-----------------------------------" << endl;
+	//FILE* stream_x0 = fopen(fileName, "w");
+	//if (stream_x0 == NULL) {
+	//	cout << "Failure of opening file " << fileName << "!\n";
+	//	return;
+	//}
+	//fprintf(stream_x0, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	//for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
+	//	fprintf(stream_x0, "%d\t%d\n", PP_MTX_N, 1);
+	//	for (int i = 0; i < PP_MTX_N; i++)
+	//		fprintf(stream_x0, "%.1f\n", 0.);
+	//}
+	//fclose(stream_x0);
+	//cout << "Values LO are saved into file '" << fileName << "'." << endl;
+	//cout << "-----------------------------------" << endl;
 
 #endif // PP_FILE_OUTPUT
 }
