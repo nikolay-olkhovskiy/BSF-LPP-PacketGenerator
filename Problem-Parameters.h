@@ -27,9 +27,8 @@ Author: Leonid B. Sokolinsky
 #define PP_SETW 8
 //#define PP_MATRIX_OUTPUT	
 #define PP_FILE_OUTPUT
-//#define PP_PATH "C:/Users/nikolay/source/repos/nikolay-olkhovskiy/BSF-LPP-PacketGenerator/"
-#define PP_PATH "C:/MODEL/"
-#define PP_LPP_FILE "lpp.txt"
+#define PP_PATH "C:/TEMP/"
+#define PP_LPP_FILE "lpp.txt.pack"
 #define PP_MTX_FILE "test.mtx"
 
 //------------------------- Matrix format ----------------

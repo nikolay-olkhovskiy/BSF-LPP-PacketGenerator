@@ -353,7 +353,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	}
 	fprintf(stream, "%d\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
-		fprintf(stream, "%d\t%d\n", PP_M, PP_N);
+		fprintf(stream, "%d\t%d\t%d\n", index+1, PP_M, PP_N);
 
 		for (int i = 0; i < PP_M; i++) {
 			for (int j = 0; j < PP_N; j++)
@@ -385,7 +385,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
 		ConvertToMTX(index);
 		int size = PD_MTXdataset.size();
-		fprintf(stream_A, "%d\t%d\t%d\n", PP_MTX_M, PP_MTX_N, size);
+		fprintf(stream_A, "%d\t%d\t%d\t%d\n", index+1, PP_MTX_M, PP_MTX_N, size);
 		for (int i = 0; i < size; i++)
 			fprintf(stream_A, "%d\t%d\t%.1f\n", PD_MTXdataset[i].row, PD_MTXdataset[i].col, PD_MTXdataset[i].val);
 	}
@@ -408,7 +408,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	}
 	fprintf(stream_b, "%d\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
-		fprintf(stream_b, "%d\t%d\n", PP_MTX_M, 1);
+		fprintf(stream_b, "%d\t%d\t%d\n", index+1, PP_MTX_M, 1);
 		for (int i = 0; i < PP_M; i++)
 			if (i < PP_N + 1 || i > PP_N * 2)
 				fprintf(stream_b, "%.1f\n", PD_dataset[index].b[i]);
@@ -432,7 +432,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	}
 	fprintf(stream_c, "%d\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
-		fprintf(stream_c, "%d\t%d\n", PP_MTX_N, 1);
+		fprintf(stream_c, "%d\t%d\t%d\n", index+1, PP_MTX_N, 1);
 		for (int i = 0; i < PP_MTX_N; i++)
 			if (i < PP_N)
 				fprintf(stream_c, "%.1f\n", -PD_dataset[index].c[i]);
@@ -458,7 +458,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	}
 	fprintf(stream_hi, "%d\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
-		fprintf(stream_hi, "%d\t%d\n", PP_MTX_N, 1);
+		fprintf(stream_hi, "%d\t%d\t%d\n", index+1, PP_MTX_N, 1);
 		for (int i = 0; i < PP_MTX_N; i++)
 				fprintf(stream_hi, "%e\n", 1e+308);
 	}
@@ -481,7 +481,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	}
 	fprintf(stream_lo, "%d\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
-		fprintf(stream_lo, "%d\t%d\n", PP_MTX_N, 1);
+		fprintf(stream_lo, "%d\t%d\t%d\n", index+1, PP_MTX_N, 1);
 		for (int i = 0; i < PP_MTX_N; i++)
 				fprintf(stream_lo, "%.1f\n", 0.);
 	}
