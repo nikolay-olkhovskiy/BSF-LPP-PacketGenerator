@@ -29,9 +29,24 @@ void PC_bsf_Init(bool* success) {
 	PP_MTX_POSTFIX_SO = config["general"]["PP_MTX_POSTFIX_SO"].as<string>();
 	PP_LPP_FILE = config["general"]["PP_LPP_FILE"].as<string>();
 
+	PP_N = config["general"]["PP_N"].as<int>();
+	PP_NUM_OF_RND_INEQUALITIES = config["generator"]["PP_NUM_OF_RND_INEQUALITIES"].as<unsigned long>();
+	PP_MTX_N = (2 * PP_N + PP_NUM_OF_RND_INEQUALITIES + 1);
+	PP_M = (2 * PP_N + PP_NUM_OF_RND_INEQUALITIES + 1);
+	PP_MTX_M = (PP_N + PP_NUM_OF_RND_INEQUALITIES + 1);
+	PP_ALPHA = config["generator"]["PP_ALPHA"].as<float>();
+	PP_THETA = (PP_ALPHA / 2);
+	PP_RHO = (PP_THETA / 2);
+	PP_A_MAX = (PP_ALPHA * 5);
+	PP_B_MAX = (PP_ALPHA * 50);
+	PP_MAX_LIKE = config["generator"]["PP_MAX_LIKE"].as<float>();
+	PP_MIN_SHIFT = (2 * PP_RHO);
+
 	PP_NUMBER_OF_PROBLEMS = config["generator"]["PP_NUMBER_OF_PROBLEMS"].as<unsigned long>();
 	PP_OUTPUT_LIMIT = config["generator"]["PP_OUTPUT_LIMIT"].as<unsigned long>();
 	PP_SETW = config["generator"]["PP_SETW"].as<unsigned long>();
+
+	PD_k = 2 * PP_N + 1;
 
 	srand((unsigned)time(NULL) * (BSF_sv_mpiRank + 10));
 	

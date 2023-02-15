@@ -11,9 +11,9 @@ Author: Leonid B. Sokolinsky
 //=========================== Problem Types =========================
 typedef float PT_float_T;
 typedef unsigned long long PT_unsigned_T;
-typedef PT_float_T	PT_vector_T[PP_N];
-typedef PT_float_T	PT_matrix_T[PP_M][PP_N];
-typedef PT_float_T	PT_column_T[PP_M];
+typedef PT_float_T	PT_vector_T[PP_MAX_N];
+typedef PT_float_T	PT_matrix_T[PP_MAX_M][PP_MAX_N];
+typedef PT_float_T	PT_column_T[PP_MAX_M];
 typedef struct {
 	PT_matrix_T A;
 	PT_column_T b;
@@ -25,6 +25,6 @@ typedef struct {
 	PT_float_T val;
 } PT_MTXrow_T;
 
-typedef PT_float_T	PT_MTXvector_T[PP_MTX_N];
-typedef PT_float_T	PT_MTXmatrix_T[PP_MTX_M][PP_MTX_N];
-typedef PT_float_T	PT_MTXcolumn_T[PP_MTX_M];
+typedef PT_float_T	PT_MTXvector_T[PP_MAX_MTX_N];
+typedef PT_float_T	PT_MTXmatrix_T[PP_MAX_MTX_M][PP_MAX_MTX_N];
+typedef PT_float_T	PT_MTXcolumn_T[PP_MAX_MTX_M];
