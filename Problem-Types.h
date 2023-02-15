@@ -10,6 +10,7 @@ Author: Leonid B. Sokolinsky
 #include "Problem-Parameters.h"		// Problem Parameters 
 //=========================== Problem Types =========================
 typedef float PT_float_T;
+typedef unsigned long long PT_unsigned_T;
 typedef PT_float_T	PT_vector_T[PP_N];
 typedef PT_float_T	PT_matrix_T[PP_M][PP_N];
 typedef PT_float_T	PT_column_T[PP_M];

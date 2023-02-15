@@ -9,8 +9,8 @@ Author: Leonid B. Sokolinsky
 //=========================== Problem Parameters =========================
 #define PP_N 3												// Space dimension
 #define PP_MTX_N (2*PP_N + PP_NUM_OF_RND_INEQUALITIES + 1)	// Number of columns (variables) in MTX format
-//#define PP_NUM_OF_RND_INEQUALITIES (2 * PP_N)				// Number of random inequalities
-#define PP_NUM_OF_RND_INEQUALITIES 0
+#define PP_NUM_OF_RND_INEQUALITIES (2 * PP_N)				// Number of random inequalities
+//#define PP_NUM_OF_RND_INEQUALITIES 0
 #define PP_M (2*PP_N + PP_NUM_OF_RND_INEQUALITIES + 1)		// Total number of inequalities
 #define PP_MTX_M (PP_N + PP_NUM_OF_RND_INEQUALITIES + 1)	// Number of inequalities in MTX matrix
 #define PP_ALPHA 200										// Length of hypercube edge
@@ -22,22 +22,19 @@ Author: Leonid B. Sokolinsky
 #define	PP_MIN_SHIFT (2*PP_RHO)								// Minimal acceptable shift
 
 //-------------------------- Input/Outpoot Parameters ---------------------------
-#define PP_NUMBER_OF_PROBLEMS 1 // Number of problems to generate and output
-#define PP_OUTPUT_LIMIT	8	// Number of Elements to output
-#define PP_SETW 8
-//#define PP_MATRIX_OUTPUT	
+#define PP_PROBLEMS_LIMIT 100000
 #define PP_FILE_OUTPUT
-#define PP_PATH "C:/TEMP/"
-#define PP_LPP_FILE "lpp.txt.pack"
-#define PP_MTX_FILE "test.mtx"
+#define PP_FILE_INI "config.ini"
+static std::string PP_PATH;
+static std::string PP_LPP_FILE;
 
 //------------------------- Matrix format ----------------
-#define PP_PROBLEM_NAME			"dataset"
-#define PP_MTX_PREFIX			"lp_"
-#define PP_MTX_POSTFIX_A		"_A.mtx.pack"
-#define PP_MTX_POSTFIX_B		"_b.mtx.pack"
-#define PP_MTX_POSTFIX_LO		"_lo.mtx.pack"
-#define PP_MTX_POSTFIX_HI		"_hi.mtx.pack"
-#define PP_MTX_POSTFIX_C		"_c.mtx.pack"
-#define PP_MTX_POSTFIX_X0		"_x0.mtx.pack" // Starting point on polytope
-#define PP_MTX_POSTFIX_SO		"_so.mtx.pack" // Solution
+static std::string PP_PROBLEM_NAME;
+static std::string PP_MTX_PREFIX;
+static std::string PP_MTX_POSTFIX_A;
+static std::string PP_MTX_POSTFIX_B;
+static std::string PP_MTX_POSTFIX_LO;
+static std::string PP_MTX_POSTFIX_HI;
+static std::string PP_MTX_POSTFIX_C;
+static std::string PP_MTX_POSTFIX_X0;
+static std::string PP_MTX_POSTFIX_SO;

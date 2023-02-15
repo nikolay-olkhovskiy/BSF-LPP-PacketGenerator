@@ -14,8 +14,27 @@ using namespace std;
 
 //----------------------- Predefined problem-dependent functions -----------------
 void PC_bsf_Init(bool* success) {
-	srand((unsigned)time(NULL) * (BSF_sv_mpiRank + 10));
+	ini::IniFile config;
 
+	config.load(PP_FILE_INI);
+	PP_PATH = config["general"]["PP_PATH"].as<string>();
+	PP_PROBLEM_NAME = config["general"]["PP_PROBLEM_NAME"].as<string>();
+	PP_MTX_PREFIX = config["general"]["PP_MTX_PREFIX"].as<string>();
+	PP_MTX_POSTFIX_A = config["general"]["PP_MTX_POSTFIX_A"].as<string>();
+	PP_MTX_POSTFIX_B = config["general"]["PP_MTX_POSTFIX_B"].as<string>();
+	PP_MTX_POSTFIX_LO = config["general"]["PP_MTX_POSTFIX_LO"].as<string>();
+	PP_MTX_POSTFIX_HI = config["general"]["PP_MTX_POSTFIX_HI"].as<string>();
+	PP_MTX_POSTFIX_C = config["general"]["PP_MTX_POSTFIX_C"].as<string>();
+	PP_MTX_POSTFIX_X0 = config["general"]["PP_MTX_POSTFIX_X0"].as<string>();
+	PP_MTX_POSTFIX_SO = config["general"]["PP_MTX_POSTFIX_SO"].as<string>();
+	PP_LPP_FILE = config["general"]["PP_LPP_FILE"].as<string>();
+
+	PP_NUMBER_OF_PROBLEMS = config["generator"]["PP_NUMBER_OF_PROBLEMS"].as<unsigned long>();
+	PP_OUTPUT_LIMIT = config["generator"]["PP_OUTPUT_LIMIT"].as<unsigned long>();
+	PP_SETW = config["generator"]["PP_SETW"].as<unsigned long>();
+
+	srand((unsigned)time(NULL) * (BSF_sv_mpiRank + 10));
+	
 	for (int j = 0; j < PP_N; j++)
 		PD_center[j] = PP_THETA;
 
@@ -341,7 +360,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "Failures 'Obtuse angle to objective' = " << PD_failuresType2 << endl;
 	cout << "Failures 'Similar' = " << PD_failuresType3 << endl;
 #ifdef PP_FILE_OUTPUT
-	PD_fileName = PP_PATH;
+	PD_fileName.assign(PP_PATH);
 	PD_fileName += PP_LPP_FILE;
 	const char* fileName = PD_fileName.c_str();
 	FILE* stream;
@@ -351,7 +370,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	fprintf(stream, "%lld\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
 		fprintf(stream, "%d\t%d\t%d\n", index+1, PP_M, PP_N);
 
@@ -369,7 +388,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "-----------------------------------" << endl;
 	
 	// --------- Output to Matrix A file ---------------- //
-	PD_fileName = PP_PATH;
+	PD_fileName.assign(PP_PATH);;
 	PD_fileName += PP_MTX_PREFIX;
 	PD_fileName += PP_PROBLEM_NAME;
 	PD_fileName += PP_MTX_POSTFIX_A;
@@ -381,7 +400,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream_A, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	fprintf(stream_A, "%lld\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
 		ConvertToMTX(index);
 		int size = PD_MTXdataset.size();
@@ -394,7 +413,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "-----------------------------------" << endl;
 
 	// --------- Output to Column b file ---------------- //
-	PD_fileName = PP_PATH;
+	PD_fileName.assign(PP_PATH);
 	PD_fileName += PP_MTX_PREFIX;
 	PD_fileName += PP_PROBLEM_NAME;
 	PD_fileName += PP_MTX_POSTFIX_B;
@@ -406,7 +425,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream_b, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	fprintf(stream_b, "%lld\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
 		fprintf(stream_b, "%d\t%d\t%d\n", index+1, PP_MTX_M, 1);
 		for (int i = 0; i < PP_M; i++)
@@ -418,7 +437,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "-----------------------------------" << endl;
 
 	// --------- Output to Vector ñ file ---------------- //
-	PD_fileName = PP_PATH;
+	PD_fileName.assign(PP_PATH);
 	PD_fileName += PP_MTX_PREFIX;
 	PD_fileName += PP_PROBLEM_NAME;
 	PD_fileName += PP_MTX_POSTFIX_C;
@@ -430,7 +449,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream_c, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	fprintf(stream_c, "%lld\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
 		fprintf(stream_c, "%d\t%d\t%d\n", index+1, PP_MTX_N, 1);
 		for (int i = 0; i < PP_MTX_N; i++)
@@ -444,7 +463,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "-----------------------------------" << endl;
 
 	// --------- Output to HI file ---------------- //
-	PD_fileName = PP_PATH;
+	PD_fileName.assign(PP_PATH);
 	PD_fileName += PP_MTX_PREFIX;
 	PD_fileName += PP_PROBLEM_NAME;
 	PD_fileName += PP_MTX_POSTFIX_HI;
@@ -456,7 +475,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream_hi, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	fprintf(stream_hi, "%lld\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
 		fprintf(stream_hi, "%d\t%d\t%d\n", index+1, PP_MTX_N, 1);
 		for (int i = 0; i < PP_MTX_N; i++)
@@ -467,7 +486,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "-----------------------------------" << endl;
 
 	// --------- Output to LO file ---------------- //
-	PD_fileName = PP_PATH;
+	PD_fileName.assign(PP_PATH);
 	PD_fileName += PP_MTX_PREFIX;
 	PD_fileName += PP_PROBLEM_NAME;
 	PD_fileName += PP_MTX_POSTFIX_LO;
@@ -479,7 +498,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 		cout << "Failure of opening file " << fileName << "!\n";
 		return;
 	}
-	fprintf(stream_lo, "%d\n", PP_NUMBER_OF_PROBLEMS);
+	fprintf(stream_lo, "%lld\n", PP_NUMBER_OF_PROBLEMS);
 	for (int index = 0; index < PP_NUMBER_OF_PROBLEMS; index++) {
 		fprintf(stream_lo, "%d\t%d\t%d\n", index+1, PP_MTX_N, 1);
 		for (int i = 0; i < PP_MTX_N; i++)
@@ -490,7 +509,7 @@ void PC_bsf_ProblemOutput(PT_bsf_reduceElem_T* reduceResult, int reduceCounter, 
 	cout << "-----------------------------------" << endl;
 
 	//// --------- Output to x0 file ---------------- //
-	//PD_fileName = PP_PATH;
+	//PD_fileName.assign(PP_PATH);
 	//PD_fileName += PP_MTX_PREFIX;
 	//PD_fileName += PP_PROBLEM_NAME;
 	//PD_fileName += PP_MTX_POSTFIX_X0;
